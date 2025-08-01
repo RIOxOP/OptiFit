@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiFit - Your Personal Health & Fitness Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .input-focus:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .animate-bounce-in {
+            animation: bounceIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.3); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.05); 
+            }
+            70% { 
+                transform: scale(0.9); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-bar {
+            transition: width 0.6s ease-in-out;
+        }
+        
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="hero-gradient text-white py-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-10"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex items-center justify-center mb-4">
+                <div class="floating">
+                    <i class="fas fa-heartbeat text-5xl mr-4 text-pink-300"></i>
+                </div>
+                <h1 class="text-5xl font-bold tracking-tight">OptiFit</h1>
+            </div>
+            <p class="text-center text-xl opacity-95 font-light">Your AI-Powered Health & Fitness Companion</p>
+            <div class="flex justify-center mt-6 space-x-4">
+                <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                    <i class="fas fa-brain text-yellow-300"></i>
+                    <span class="text-sm">AI-Powered</span>
+                </div>
+                <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                    <i class="fas fa-chart-line text-green-300"></i>
+                    <span class="text-sm">Personalized</span>
+                </div>
+                <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                    <i class="fas fa-shield-alt text-blue-300"></i>
+                    <span class="text-sm">Secure</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="max-w-5xl mx-auto">
+            <!-- Welcome Section -->
+            <div class="text-center mb-12 animate-fade-in">
+                <h2 class="text-4xl font-bold text-gray-800 mb-6">Transform Your Health Journey</h2>
+                <p class="text-gray-600 text-xl max-w-3xl mx-auto leading-relaxed">
+                    Get personalized diet plans, workout routines, and restaurant recommendations 
+                    tailored to your unique profile and health goals.
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-3xl shadow-2xl p-10 card-hover animate-slide-up">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mb-4">
+                        <i class="fas fa-user-md text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Your Health Profile</h3>
+                    <p class="text-gray-600">Tell us about yourself to get personalized recommendations</p>
+                </div>
+
+                <form action="/recommend" method="POST" class="space-y-8">
+                    <!-- Personal Information -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-user-circle text-blue-500 mr-2"></i>
+                            Personal Information
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-birthday-cake text-pink-500 mr-2"></i>
+                                    Age
+                                </label>
+                                <input type="number" name="age" required 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="Enter your age">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-venus-mars text-purple-500 mr-2"></i>
+                                    Gender
+                                </label>
+                                <select name="gender" required 
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300">
+                                    <option value="">Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-weight text-green-500 mr-2"></i>
+                                    Weight (kg)
+                                </label>
+                                <input type="number" step="0.1" name="weight" required 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="e.g., 70.5">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-ruler-vertical text-orange-500 mr-2"></i>
+                                    Height (ft)
+                                </label>
+                                <input type="number" step="0.1" name="height" required 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="e.g., 5.8">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dietary Preferences -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-utensils text-green-500 mr-2"></i>
+                            Dietary Preferences
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-leaf text-green-500 mr-2"></i>
+                                    Dietary Preference
+                                </label>
+                                <select name="veg_or_nonveg" required 
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300">
+                                    <option value="">Select preference</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="non-vegetarian">Non-Vegetarian</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-running text-indigo-500 mr-2"></i>
+                                    Activity Level
+                                </label>
+                                <select name="activity_level" required 
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300">
+                                    <option value="">Select activity level</option>
+                                    <option value="sedentary">Sedentary (Little or no exercise)</option>
+                                    <option value="light">Light (Exercise 1-3 days/week)</option>
+                                    <option value="moderate">Moderate (Exercise 3-5 days/week)</option>
+                                    <option value="active">Active (Exercise 6-7 days/week)</option>
+                                    <option value="very_active">Very Active (Hard exercise, physical job)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Information -->
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-heartbeat text-red-500 mr-2"></i>
+                            Health Information
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-orange-500 mr-2"></i>
+                                    Health Conditions
+                                </label>
+                                <input type="text" name="disease" 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="e.g., Diabetes, Hypertension (or None)">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-allergies text-yellow-500 mr-2"></i>
+                                    Allergies
+                                </label>
+                                <input type="text" name="allergics" 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="e.g., Nuts, Dairy (or None)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Preferences -->
+                    <div class="bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-cog text-purple-500 mr-2"></i>
+                            Additional Preferences
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-globe text-blue-500 mr-2"></i>
+                                    Region/Cuisine Preference
+                                </label>
+                                <input type="text" name="region" 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="e.g., Indian, Mediterranean, etc.">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                    <i class="fas fa-utensils text-green-500 mr-2"></i>
+                                    Food Type Preference
+                                </label>
+                                <input type="text" name="foodtype" 
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus focus:outline-none transition-all duration-300"
+                                       placeholder="e.g., Low carb, High protein, etc.">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center pt-8">
+                        <button type="submit" 
+                                class="btn-primary text-white px-12 py-5 rounded-2xl text-xl font-semibold inline-flex items-center space-x-3 animate-bounce-in">
+                            <i class="fas fa-magic"></i>
+                            <span>Get Personalized Recommendations</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <p class="text-gray-500 text-sm mt-4">Your data is secure and will only be used for recommendations</p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Features Section -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 text-center card-hover feature-card">
+                    <div class="feature-icon inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-6">
+                        <i class="fas fa-calculator text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Smart BMI & BMR Calculator</h3>
+                    <p class="text-gray-600 leading-relaxed">Automatic calculation of Body Mass Index and Basal Metabolic Rate for accurate health insights</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 text-center card-hover feature-card">
+                    <div class="feature-icon inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full mb-6">
+                        <i class="fas fa-utensils text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">AI-Powered Diet Plans</h3>
+                    <p class="text-gray-600 leading-relaxed">Personalized meal plans and restaurant suggestions tailored to your preferences and health goals</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 text-center card-hover feature-card">
+                    <div class="feature-icon inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mb-6">
+                        <i class="fas fa-dumbbell text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Custom Workout Routines</h3>
+                    <p class="text-gray-600 leading-relaxed">Expert-designed exercise routines that match your fitness level and health objectives</p>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="mt-16 bg-white rounded-3xl p-8 shadow-xl">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Why Choose OptiFit?</h3>
+                    <p class="text-gray-600">Join thousands of users who have transformed their health journey</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">95%</div>
+                        <div class="text-gray-600">User Satisfaction</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600 mb-2">10K+</div>
+                        <div class="text-gray-600">Active Users</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-purple-600 mb-2">24/7</div>
+                        <div class="text-gray-600">AI Support</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-orange-600 mb-2">100%</div>
+                        <div class="text-gray-600">Data Privacy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+                    <h3 class="text-2xl font-bold">OptiFit</h3>
+                </div>
+                <p class="text-gray-400 mb-6 max-w-2xl mx-auto">
+                    Your AI-powered health and fitness companion. Get personalized recommendations, 
+                    track your progress, and achieve your health goals with confidence.
+                </p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+                <div class="border-t border-gray-800 pt-6">
+                    <p class="text-gray-400">&copy; 2024 OptiFit. All rights reserved. Your health, optimized.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling and form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form validation
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value.trim() === '') {
+                        this.classList.add('border-red-300');
+                    } else {
+                        this.classList.remove('border-red-300');
+                    }
+                });
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

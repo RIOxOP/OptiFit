@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiFit - Your Personalized Recommendations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .animate-bounce-in {
+            animation: bounceIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.3); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.05); 
+            }
+            70% { 
+                transform: scale(0.9); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-bar {
+            transition: width 0.6s ease-in-out;
+        }
+        
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .recommendation-card {
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .recommendation-card:hover {
+            border-left-color: #764ba2;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="hero-gradient text-white py-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-10"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex items-center justify-center mb-4">
+                <div class="floating">
+                    <i class="fas fa-heartbeat text-5xl mr-4 text-pink-300"></i>
+                </div>
+                <h1 class="text-5xl font-bold tracking-tight">OptiFit</h1>
+            </div>
+            <p class="text-center text-xl opacity-95 font-light">Your Personalized Health Recommendations</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="max-w-6xl mx-auto">
+            <!-- Success Message -->
+            <div class="text-center mb-12 animate-fade-in">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-full mb-6">
+                    <i class="fas fa-check text-white text-3xl"></i>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Your Health Profile Analysis Complete!</h2>
+                <p class="text-gray-600 text-xl max-w-3xl mx-auto leading-relaxed">
+                    Based on your unique profile, here are your personalized recommendations for optimal health and fitness.
+                </p>
+            </div>
+
+            <!-- Health Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 animate-slide-up">
+                <div class="metric-card rounded-2xl p-6 text-center card-hover">
+                    <div class="text-3xl font-bold mb-2">{{ bmi }}</div>
+                    <div class="text-sm opacity-90">BMI</div>
+                    <div class="text-xs opacity-75 mt-1">{{ bmi_category }}</div>
+                </div>
+                <div class="metric-card rounded-2xl p-6 text-center card-hover">
+                    <div class="text-3xl font-bold mb-2">{{ bmr }}</div>
+                    <div class="text-sm opacity-90">BMR (calories)</div>
+                    <div class="text-xs opacity-75 mt-1">Basal Metabolic Rate</div>
+                </div>
+                <div class="metric-card rounded-2xl p-6 text-center card-hover">
+                    <div class="text-3xl font-bold mb-2">{{ tdee }}</div>
+                    <div class="text-sm opacity-90">TDEE (calories)</div>
+                    <div class="text-xs opacity-75 mt-1">Daily Energy Needs</div>
+                </div>
+                <div class="metric-card rounded-2xl p-6 text-center card-hover">
+                    <div class="text-3xl font-bold mb-2">{{ age }}</div>
+                    <div class="text-sm opacity-90">Age</div>
+                    <div class="text-xs opacity-75 mt-1">{{ gender|title }}</div>
+                </div>
+            </div>
+
+            <!-- Recommendations Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Restaurants -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-utensils text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Recommended Restaurants</h3>
+                    </div>
+                    <div class="space-y-4">
+                        {% for restaurant in restaurant_names %}
+                        <div class="recommendation-card bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400 mr-3"></i>
+                                <span class="font-medium text-gray-800">{{ restaurant }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Breakfast -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-sun text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Breakfast Recommendations</h3>
+                    </div>
+                    <div class="space-y-4">
+                        {% for breakfast in breakfast_names %}
+                        <div class="recommendation-card bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-egg text-orange-400 mr-3"></i>
+                                <span class="font-medium text-gray-800">{{ breakfast }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Dinner -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-moon text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Dinner Recommendations</h3>
+                    </div>
+                    <div class="space-y-4">
+                        {% for dinner in dinner_names %}
+                        <div class="recommendation-card bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-drumstick-bite text-red-400 mr-3"></i>
+                                <span class="font-medium text-gray-800">{{ dinner }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Workouts -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-dumbbell text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Workout Plan</h3>
+                    </div>
+                    <div class="space-y-4">
+                        {% for workout in workout_names %}
+                        <div class="recommendation-card bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-running text-blue-400 mr-3"></i>
+                                <span class="font-medium text-gray-800">{{ workout }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Tips -->
+            <div class="mt-12 bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Health Tips for You</h3>
+                    <p class="text-gray-600">Based on your BMI category: <span class="font-semibold text-blue-600">{{ bmi_category }}</span></p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl">
+                        <i class="fas fa-heart text-3xl text-red-500 mb-4"></i>
+                        <h4 class="font-semibold text-gray-800 mb-2">Nutrition</h4>
+                        <p class="text-gray-600 text-sm">Focus on balanced meals with proper portion control</p>
+                    </div>
+                    <div class="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl">
+                        <i class="fas fa-dumbbell text-3xl text-green-500 mb-4"></i>
+                        <h4 class="font-semibold text-gray-800 mb-2">Exercise</h4>
+                        <p class="text-gray-600 text-sm">Aim for at least 150 minutes of moderate activity weekly</p>
+                    </div>
+                    <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl">
+                        <i class="fas fa-bed text-3xl text-purple-500 mb-4"></i>
+                        <h4 class="font-semibold text-gray-800 mb-2">Lifestyle</h4>
+                        <p class="text-gray-600 text-sm">Maintain consistent sleep patterns and stress management</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-12 animate-bounce-in">
+                <a href="/" class="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 mr-4">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Get New Recommendations</span>
+                </a>
+                <button onclick="window.print()" class="inline-flex items-center space-x-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300">
+                    <i class="fas fa-print"></i>
+                    <span>Print Recommendations</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <i class="fas fa-heartbeat text-3xl mr-3 text-pink-400"></i>
+                    <h3 class="text-2xl font-bold">OptiFit</h3>
+                </div>
+                <p class="text-gray-400 mb-6 max-w-2xl mx-auto">
+                    Your AI-powered health and fitness companion. Get personalized recommendations, 
+                    track your progress, and achieve your health goals with confidence.
+                </p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+                <div class="border-t border-gray-800 pt-6">
+                    <p class="text-gray-400">&copy; 2024 OptiFit. All rights reserved. Your health, optimized.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth animations and interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all recommendation cards
+            document.querySelectorAll('.recommendation-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease-out';
+                observer.observe(card);
+            });
+            
+            // Add click effects to recommendation cards
+            document.querySelectorAll('.recommendation-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
