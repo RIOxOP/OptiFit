@@ -46,3 +46,13 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Image files
+download (19).jpeg
+*.jpeg
+*.jpg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
