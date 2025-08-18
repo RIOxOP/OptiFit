@@ -11,9 +11,10 @@ OptiFit is a comprehensive health and fitness application that provides personal
 ### Core Features
 - **Personalized Diet Recommendations**: AI-powered meal suggestions based on your profile
 - **Workout Recommendations**: Customized exercise plans
-- **Restaurant Suggestions**: Local dining options that match your preferences
+
 - **BMI & BMR Calculations**: Scientific health metrics using Mifflin-St Jeor Equation
 - **Activity Level Integration**: Accurate TDEE calculations based on activity level
+- **AI Coach Bot**: Interactive chat interface for personalized fitness and nutrition advice
 
 ### Advanced Food Analysis
 - **Image Recognition**: Upload food images for instant analysis
@@ -73,6 +74,22 @@ OptiFit is a comprehensive health and fitness application that provides personal
 2. **Click "Analyze Food"** to get instant nutritional analysis
 3. **Review results** including calories, health rating, and nutritional insights
 
+### AI Coach Bot
+1. **Click "Chat with AI Coach"** on the homepage to access the chat interface
+2. **Use quick prompt buttons** for common questions about workouts, nutrition, and recovery
+3. **Type custom questions** in the chat input for personalized advice
+4. **Use voice input** with microphone button (supports Hindi, English, and Indian English)
+5. **Get multilingual responses** in the same language as your question
+6. **Get concise, formatted responses** with bullet points and proper alignment
+7. **Real-time responses** with conversation memory for contextual follow-ups
+
+### Multilingual Support
+- **Hindi Voice Input**: Click microphone button and speak in Hindi
+- **English Voice Input**: Switch to English for voice commands
+- **Indian English**: Optimized for Indian English pronunciation
+- **Automatic Language Detection**: AI responds in the same language as your question
+- **Hindi Quick Prompts**: Pre-built Hindi questions for common fitness queries
+
 ### Understanding Results
 - **BMI Categories**: Underweight (<18.5), Normal (18.5-24.9), Overweight (25-29.9), Obese (≥30)
 - **BMR**: Basal Metabolic Rate - calories burned at rest
@@ -84,6 +101,8 @@ OptiFit is a comprehensive health and fitness application that provides personal
 ### AI Models Used
 - **Food Recognition**: Hugging Face Food101 model for image classification
 - **Diet Recommendations**: Groq LLM with LangChain integration
+- **AI Coach Bot**: Google Gemini Pro with LangChain conversation memory
+- **Multilingual Support**: Native Hindi and English language processing
 - **Nutrition Database**: Comprehensive food nutrition database
 
 ### Health Calculations

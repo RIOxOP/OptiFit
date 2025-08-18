@@ -64,8 +64,6 @@ prompt_template_resto = PromptTemplate(
     template=(
         "Diet Recommendation System:\n"
         "I want you to provide output in the following format using the input criteria:\n\n"
-        "Restaurants:\n"
-        "- name1\n- name2\n- name3\n- name4\n- name5\n- name6\n\n"
         "Breakfast:\n"
         "- item1\n- item2\n- item3\n- item4\n- item5\n- item6\n\n"
         "Dinner:\n"
@@ -111,7 +109,6 @@ input_data.update({
 
 results = chain.run(input_data)
 
-restaurant_names = re.findall(r'Restaurants:\s*(.*?)\n\n', results, re.DOTALL)
 breakfast_names = re.findall(r'Breakfast:\s*(.*?)\n\n', results, re.DOTALL)
 dinner_names = re.findall(r'Dinner:\s*(.*?)\n\n', results, re.DOTALL)
 workout_names = re.findall(r'Workouts:\s*(.*?)\n\n', results, re.DOTALL)
@@ -119,7 +116,6 @@ workout_names = re.findall(r'Workouts:\s*(.*?)\n\n', results, re.DOTALL)
 def clean_list(block):
     return [line.strip("- ")for line in block.strip().split("\n") if line.strip()]
 
-restaurant_names = clean_list(restaurant_names[0]) if restaurant_names else []
 breakfast_names = clean_list(breakfast_names[0]) if breakfast_names else []
 dinner_names = clean_list(dinner_names[0]) if dinner_names else []
 workout_names = clean_list(workout_names[0]) if workout_names else []
@@ -131,7 +127,6 @@ print(f"TDEE: {tdee} calories/day")
 print(f"Profile: {input_data['age']} years, {input_data['gender']}, {input_data['weight']}kg, {input_data['height']}ft")
 
 print("\n=== RECOMMENDATIONS ===")
-print("\n Recommended Restaurants : \n", "\n".join(restaurant_names))
 print("\n Recommended Breakfast : \n", "\n".join(breakfast_names))
 print("\n Recommended Dinner : \n", "\n".join(dinner_names))
 print("\n Recommended Workouts : \n", "\n".join(workout_names))

@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 import re
 import math
+import json
 
 app = Flask(__name__)
 
@@ -62,13 +63,46 @@ llm_resto = ChatGroq(
     temperature=0.0
 )
 
+# --- AI Coach Bot Setup ---
+llm_coach = ChatGroq(
+    api_key=os.getenv("GROQ_API_KEY"),
+    model="llama-3.3-70b-versatile",
+    temperature=0.7  # Slightly higher temperature for more creative responses
+)
+
+# AI Coach Prompt Template
+coach_prompt_template = PromptTemplate(
+    input_variables=['human_input'],
+    template=(
+        "You are an expert AI fitness and nutrition coach. Provide SHORT, CONCISE, and WELL-FORMATTED responses.\n\n"
+        "RESPONSE FORMAT:\n"
+        "• Use bullet points (•) for lists\n"
+        "• Keep each point brief (1-2 lines max)\n"
+        "• Use clear headings when needed\n"
+        "• Maximum 5-6 points per response\n"
+        "• Be encouraging and practical\n\n"
+        "TOPICS:\n"
+        "• Workout routines and exercises\n"
+        "• Nutrition and meal planning\n"
+        "• Recovery and supplement advice\n"
+        "• Fitness tips and motivation\n"
+        "• Weight loss and muscle building\n\n"
+        "MULTILINGUAL SUPPORT:\n"
+        "• Respond in the same language as the user's question\n"
+        "• Support both Hindi and English\n"
+        "• Maintain consistent formatting in all languages\n\n"
+        "IMPORTANT: Keep responses under 150 words. Use proper formatting with bullet points.\n"
+        "For medical advice, remind users to consult healthcare professionals.\n\n"
+        "Human: {human_input}\n"
+        "AI Coach:"
+    )
+)
+
 prompt_template_resto = PromptTemplate(
     input_variables=['age', 'gender', 'weight', 'height', 'veg_or_nonveg', 'disease', 'region', 'allergics', 'foodtype', 'bmi', 'bmi_category', 'bmr', 'tdee'],
     template=(
         "Diet Recommendation System:\n"
         "I want you to provide output in the following format using the input criteria:\n\n"
-        "Restaurants:\n"
-        "- name1\n- name2\n- name3\n- name4\n- name5\n- name6\n\n"
         "Breakfast:\n"
         "- item1\n- item2\n- item3\n- item4\n- item5\n- item6\n\n"
         "Dinner:\n"
@@ -128,7 +162,6 @@ def recommend():
 
         results = chain.run(input_data)
 
-        restaurant_names = re.findall(r'Restaurants:\s*(.*?)\n\n', results, re.DOTALL)
         breakfast_names = re.findall(r'Breakfast:\s*(.*?)\n\n', results, re.DOTALL)
         dinner_names = re.findall(r'Dinner:\s*(.*?)\n\n', results, re.DOTALL)
         workout_names = re.findall(r'Workouts:\s*(.*?)\n\n', results, re.DOTALL)
@@ -136,13 +169,11 @@ def recommend():
         def clean_list(block):
             return [line.strip("- ")for line in block.strip().split("\n") if line.strip()]
 
-        restaurant_names = clean_list(restaurant_names[0]) if restaurant_names else []
         breakfast_names = clean_list(breakfast_names[0]) if breakfast_names else []
         dinner_names = clean_list(dinner_names[0]) if dinner_names else []
         workout_names = clean_list(workout_names[0]) if workout_names else []
 
         return render_template('result.html', 
-                             restaurant_names=restaurant_names, 
                              breakfast_names=breakfast_names, 
                              dinner_names=dinner_names, 
                              workout_names=workout_names,
@@ -155,6 +186,43 @@ def recommend():
                              age=age,
                              gender=gender)
     return render_template("index.html")
+
+@app.route('/chat')
+def chat():
+    """Render the chat page"""
+    return render_template("chat.html")
+
+@app.route('/chat', methods=['POST'])
+def chat_api():
+    """Handle chat messages via API"""
+    try:
+        data = request.get_json()
+        user_message = data.get('message', '').strip()
+        
+        if not user_message:
+            return jsonify({'error': 'Message cannot be empty'}), 400
+        
+        # Create LLM chain with the coach prompt
+        coach_chain = LLMChain(
+            llm=llm_coach,
+            prompt=coach_prompt_template,
+            verbose=False
+        )
+        
+        # Get response from the chain
+        ai_response = coach_chain.run(human_input=user_message)
+        
+        return jsonify({
+            'response': ai_response,
+            'status': 'success'
+        })
+        
+    except Exception as e:
+        print(f"Error in chat API: {str(e)}")
+        return jsonify({
+            'error': 'Sorry, I encountered an error. Please try again.',
+            'status': 'error'
+        }), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

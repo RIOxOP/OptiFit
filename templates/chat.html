@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coach Bot - OptiFit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .chat-container {
+            height: calc(100vh - 300px);
+            min-height: 500px;
+        }
+        
+        .message-bubble {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .prompt-button {
+            transition: all 0.3s ease;
+        }
+        
+        .prompt-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="hero-gradient text-white py-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-10"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                        <span class="text-lg font-medium">Back to OptiFit</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-robot text-3xl text-yellow-300"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">AI Coach Bot</h1>
+                        <p class="text-sm opacity-90">Your Personal Fitness & Nutrition Assistant</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-sm">Online</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Interface -->
+    <main class="container mx-auto px-4 py-6">
+        <div class="max-w-4xl mx-auto">
+            <!-- Quick Prompts -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-lightning-bolt text-yellow-500 mr-2"></i>
+                    Quick Questions
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('10-minute fat-burning workout')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-fire text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">Quick Workout</p>
+                                <p class="text-xs text-gray-500">10 min fat burn</p>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('Post workout recovery meal')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-apple-alt text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">Recovery Meal</p>
+                                <p class="text-xs text-gray-500">Post workout</p>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('Vegetarian protein dinner')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-seedling text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">Veg Protein</p>
+                                <p class="text-xs text-gray-500">Dinner plan</p>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('Rice in weight loss diet')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-question text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">Diet Tips</p>
+                                <p class="text-xs text-gray-500">Weight loss</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                
+                <!-- Hindi Quick Prompts -->
+                <div class="mt-4">
+                    <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-language text-blue-500 mr-2"></i>
+                        हिंदी में प्रश्न (Hindi Questions)
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('10 मिनट का फैट बर्निंग वर्कआउट')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-fire text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 text-sm">क्विक वर्कआउट</p>
+                                    <p class="text-xs text-gray-500">10 मिनट फैट बर्न</p>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('वर्कआउट के बाद क्या खाएं')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-apple-alt text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 text-sm">रिकवरी मील</p>
+                                    <p class="text-xs text-gray-500">वर्कआउट के बाद</p>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('शाकाहारी प्रोटीन डिनर')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-seedling text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 text-sm">वेज प्रोटीन</p>
+                                    <p class="text-xs text-gray-500">डिनर प्लान</p>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="prompt-button bg-white rounded-xl p-4 shadow-md border border-gray-200 hover:border-blue-300 text-left" onclick="sendQuickPrompt('वजन घटाने में चावल खा सकते हैं')">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-question text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 text-sm">डाइट टिप्स</p>
+                                    <p class="text-xs text-gray-500">वजन घटाना</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <!-- Chat Messages Area -->
+                <div id="chat-messages" class="chat-container overflow-y-auto p-6 space-y-4">
+                    <!-- Welcome Message -->
+                    <div class="message-bubble flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-robot text-white text-sm"></i>
+                        </div>
+                        <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-3 max-w-xs lg:max-w-md">
+                            <p class="text-gray-800">
+                                👋 Hello! I'm your AI fitness coach. I can help you with:
+                            </p>
+                            <ul class="mt-2 text-sm text-gray-600 space-y-1">
+                                <li>• Workout routines and exercises</li>
+                                <li>• Nutrition and meal planning</li>
+                                <li>• Recovery and supplement advice</li>
+                                <li>• Fitness tips and motivation</li>
+                            </ul>
+                            <p class="mt-2 text-sm text-gray-600">
+                                💡 <strong>Tip:</strong> Use the microphone button for voice input in Hindi or English! 
+                                <br>🌐 <strong>Multilingual:</strong> I can respond in both Hindi and English!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator (Hidden by default) -->
+                <div id="typing-indicator" class="hidden p-6">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-robot text-white text-sm"></i>
+                        </div>
+                        <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-3">
+                            <div class="flex space-x-1">
+                                <div class="typing-indicator"></div>
+                                <span class="text-sm text-gray-500 ml-2">AI Coach is typing...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Input Area -->
+                <div class="border-t border-gray-200 p-4">
+                    <form id="chat-form" class="flex space-x-3">
+                        <div class="flex-1 relative">
+                            <input 
+                                type="text" 
+                                id="message-input" 
+                                placeholder="Ask me about fitness, nutrition, or workouts..." 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                maxlength="500"
+                            >
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                                <span id="char-count">0</span>/500
+                            </div>
+                        </div>
+                        <button 
+                            type="button" 
+                            id="voice-button"
+                            class="bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-3 rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Voice Input (Hindi/English)"
+                        >
+                            <i class="fas fa-microphone" id="mic-icon"></i>
+                            <span id="lang-indicator" class="text-xs">EN</span>
+                        </button>
+                        <button 
+                            type="submit" 
+                            id="send-button"
+                            class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Send</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const voiceButton = document.getElementById('voice-button');
+        const chatForm = document.getElementById('chat-form');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const charCount = document.getElementById('char-count');
+        
+        // Voice recognition setup
+        let recognition = null;
+        let isListening = false;
+        
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US'; // Default to English
+                
+                // Enhanced language support
+                const supportedLanguages = {
+                    'en-US': 'English',
+                    'hi-IN': 'Hindi',
+                    'en-IN': 'Indian English'
+                };
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    voiceButton.classList.add('bg-red-500');
+                    voiceButton.classList.remove('bg-gradient-to-r', 'from-green-500', 'to-teal-500');
+                    document.getElementById('mic-icon').className = 'fas fa-stop';
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    messageInput.value = transcript;
+                    charCount.textContent = transcript.length;
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    voiceButton.classList.remove('bg-red-500');
+                    voiceButton.classList.add('bg-gradient-to-r', 'from-green-500', 'to-teal-500');
+                    document.getElementById('mic-icon').className = 'fas fa-microphone';
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    isListening = false;
+                    voiceButton.classList.remove('bg-red-500');
+                    voiceButton.classList.add('bg-gradient-to-r', 'from-green-500', 'to-teal-500');
+                    document.getElementById('mic-icon').className = 'fas fa-microphone';
+                };
+            } else {
+                voiceButton.style.display = 'none';
+                console.log('Speech recognition not supported');
+            }
+        }
+
+        // Character counter
+        messageInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        // Auto-resize textarea (if we change to textarea later)
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // Send message function
+        async function sendMessage(message) {
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Clear input
+            messageInput.value = '';
+            charCount.textContent = '0';
+            
+            // Show typing indicator
+            typingIndicator.classList.remove('hidden');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Disable input while processing
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                // Hide typing indicator
+                typingIndicator.classList.add('hidden');
+                
+                // Add AI response
+                addMessage(data.response, 'ai');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                typingIndicator.classList.add('hidden');
+                addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+            } finally {
+                // Re-enable input
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        // Add message to chat
+        function addMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-bubble flex items-start space-x-3';
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex-1"></div>
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl rounded-tr-md px-4 py-3 max-w-xs lg:max-w-md">
+                        <p class="text-white">${escapeHtml(message)}</p>
+                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                `;
+            } else {
+                // Format AI response with proper styling
+                const formattedMessage = formatAIResponse(message);
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-3 max-w-xs lg:max-w-md">
+                        <div class="text-gray-800">${formattedMessage}</div>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Format AI response with proper styling
+        function formatAIResponse(text) {
+            // Convert bullet points to styled HTML
+            text = text.replace(/•/g, '<span class="text-blue-600 font-bold">•</span>');
+            
+            // Convert line breaks to proper spacing
+            text = text.replace(/\n/g, '<br>');
+            
+            // Add spacing between bullet points
+            text = text.replace(/<br><span class="text-blue-600 font-bold">•<\/span>/g, '<br><br><span class="text-blue-600 font-bold">•</span>');
+            
+            return text;
+        }
+
+        // Quick prompt function
+        function sendQuickPrompt(prompt) {
+            sendMessage(prompt);
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Voice button functionality
+        voiceButton.addEventListener('click', function() {
+            if (!recognition) {
+                alert('Voice recognition not supported in your browser');
+                return;
+            }
+            
+            if (isListening) {
+                recognition.stop();
+            } else {
+                // Enhanced language switching
+                const currentLang = recognition.lang;
+                const langIndicator = document.getElementById('lang-indicator');
+                
+                // Cycle through supported languages
+                const languageCycle = {
+                    'en-US': { next: 'hi-IN', indicator: 'HI', title: 'Voice Input (Hindi)' },
+                    'hi-IN': { next: 'en-IN', indicator: 'IN', title: 'Voice Input (Indian English)' },
+                    'en-IN': { next: 'en-US', indicator: 'EN', title: 'Voice Input (English)' }
+                };
+                
+                const nextLang = languageCycle[currentLang] || languageCycle['en-US'];
+                recognition.lang = nextLang.next;
+                voiceButton.title = nextLang.title;
+                langIndicator.textContent = nextLang.indicator;
+                
+                // Show language change notification
+                showLanguageNotification(nextLang.indicator);
+                
+                recognition.start();
+            }
+        });
+        
+        // Show language change notification
+        function showLanguageNotification(lang) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            notification.textContent = `Voice input: ${lang === 'HI' ? 'Hindi' : lang === 'IN' ? 'Indian English' : 'English'}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+        
+        // Form submission
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message) {
+                sendMessage(message);
+            }
+        });
+
+        // Enter key to send (but allow Shift+Enter for new line)
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const message = this.value.trim();
+                if (message) {
+                    sendMessage(message);
+                }
+            }
+        });
+
+        // Initialize speech recognition on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initSpeechRecognition();
+        });
+
+        // Focus input on page load
+        messageInput.focus();
+    </script>
+</body>
+</html> 

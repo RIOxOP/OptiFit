@@ -175,26 +175,6 @@
 
             <!-- Recommendations Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Restaurants -->
-                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
-                    <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
-                            <i class="fas fa-utensils text-white text-xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-800">Recommended Restaurants</h3>
-                    </div>
-                    <div class="space-y-4">
-                        {% for restaurant in restaurant_names %}
-                        <div class="recommendation-card bg-gray-50 rounded-xl p-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400 mr-3"></i>
-                                <span class="font-medium text-gray-800">{{ restaurant }}</span>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
                 <!-- Breakfast -->
                 <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover animate-slide-up">
                     <div class="flex items-center mb-6">
