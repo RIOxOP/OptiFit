@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, jsonify
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
@@ -7,6 +8,8 @@ import os
 import re
 import math
 import json
+from recipes import filter_recipes, generate_recipe_text
+from recipe_model import recommend_recipes
 
 app = Flask(__name__)
 
@@ -192,6 +195,54 @@ def chat():
     """Render the chat page"""
     return render_template("chat.html")
 
+
+# --- Recipe Generator Routes ---
+@app.route('/recipes')
+def recipes_page():
+    """Render recipe input form"""
+    return render_template('recipe.html')
+
+
+# Model-based recipe recommendation
+@app.route('/recipes/model', methods=['GET', 'POST'])
+def recipes_model():
+    results = None
+    user_ingredients = ''
+    error = None
+    if request.method == 'POST':
+        user_ingredients = request.form.get('user_ingredients', '')
+        results = recommend_recipes(user_ingredients, top_n=5)
+        if results and 'error' in results[0]:
+            error = results[0]['error']
+            results = None
+    return render_template('recipe_model.html', results=results, user_ingredients=user_ingredients, error=error)
+
+
+@app.route('/recipes/generate', methods=['POST'])
+def generate_recipes():
+    form = request.form
+    prefs = {
+        'veg_or_nonveg': form.get('veg_or_nonveg', ''),
+        'region': form.get('region', ''),
+        'foodtype': form.get('foodtype', ''),
+        'allergics': form.get('allergics', '')
+    }
+    target = form.get('target_calories')
+    try:
+        target_cal = int(target) if target else None
+    except Exception:
+        target_cal = None
+
+    recs = filter_recipes(prefs, top_n=6)
+    # Ensure standardized keys
+    for r in recs:
+        if 'name' not in r:
+            r['name'] = r.get('recipe_name') or r.get('name') or 'Recipe'
+        if 'ingredients' not in r:
+            r['ingredients'] = r.get('ingredients') or ''
+
+    return render_template('recipe_result.html', recipes=recs, target_calories=target_cal)
+
 @app.route('/chat', methods=['POST'])
 def chat_api():
     """Handle chat messages via API"""
@@ -224,5 +275,12 @@ def chat_api():
             'status': 'error'
         }), 500
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/base')
+def base():
+    return render_template('base.html')
 if __name__ == "__main__":
     app.run(debug=True)

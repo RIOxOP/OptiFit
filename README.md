@@ -34,22 +34,23 @@ OptiFit is a comprehensive health and fitness application that provides personal
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd OptiFit
-   ```
 
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+   # OptiFit
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+   A fitness and nutrition recommendation system using AI and Indian food datasets.
 
-4. **Set up environment variables**
-   Create a `.env` file in the root directory:
+   ## Structure
+   - `src/` - Main application code (Flask app, models, logic)
+   - `data/` - Datasets and text resources (CSV, TXT)
+   - `static/` - CSS, JS, and static assets
+   - `templates/` - HTML templates
+   - `tests/` - Test files
+
+   ## Setup
+   See `requirements.txt` for dependencies.
+
+   ## Usage
+   Run the app from `src/app.py`.
    ```
    GROQ_API_KEY=your_groq_api_key_here
    ```
